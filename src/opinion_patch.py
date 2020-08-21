@@ -8,26 +8,26 @@ import spacy
 from pandas import read_csv,DataFrame
 nlp = spacy.load('en_core_web_sm')
 
-cat_model = load_model('./Sup/categorical_model.h5')
-cat_model.load_weights('./Sup/categorical_model_weights.h5')
+cat_model = load_model('../Sup/categorical_model.h5')
+cat_model.load_weights('../Sup/categorical_model_weights.h5')
 
 # loading tokenizer
-with open('./Sup/categorical_tokenizer.pickle', 'rb') as handle:
+with open('../Sup/categorical_tokenizer.pickle', 'rb') as handle:
     cat_tokenizer = load(handle)
 
 # loading labeleEncoder
-with open('./Sup/categorical_labeleEncorder.pkl', 'rb') as handle:
+with open('../Sup/categorical_labeleEncorder.pkl', 'rb') as handle:
     cat_label_encoder = load(handle)
 
-sen_model = load_model('./Sup/sentimental_model.h5')
-sen_model.load_weights('./Sup/sentimental_model_weights.h5')
+sen_model = load_model('../Sup/sentimental_model.h5')
+sen_model.load_weights('../Sup/sentimental_model_weights.h5')
 
 # loading tokenizer
-with open('./Sup/sentimental_tokenizer.pickle', 'rb') as handle:
+with open('../Sup/sentimental_tokenizer.pickle', 'rb') as handle:
     sen_tokenizer = load(handle)
 
 # loading labeleEncoder
-with open('./Sup/sentimental_labeleEncorder.pkl', 'rb') as handle:
+with open('../Sup/sentimental_labeleEncorder.pkl', 'rb') as handle:
     sen_label_encoder = load(handle)
 
 categories = ['DIRECTING#PERFORMANCE', 'WRITING#PERFORMANCE', 'CAST#PERFORMANCE',
