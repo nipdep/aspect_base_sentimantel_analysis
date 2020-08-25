@@ -8,30 +8,23 @@ import spacy
 from pandas import read_csv,DataFrame
 nlp = spacy.load('en_core_web_sm')
 
-cat_model = load_model('../Sup/categorical_model.h5')
-cat_model.load_weights('../Sup/categorical_model_weights.h5')
+cat_model = load_model('./Sup/categorical_model.h5')
+cat_model.load_weights('./Sup/categorical_model_weights.h5')
 
 # loading tokenizer
-with open('../Sup/categorical_tokenizer.pickle', 'rb') as handle:
+with open('./Sup/categorical_tokenizer.pickle', 'rb') as handle:
     cat_tokenizer = load(handle)
 
-# loading labeleEncoder
-with open('../Sup/categorical_labeleEncorder.pkl', 'rb') as handle:
-    cat_label_encoder = load(handle)
 
-sen_model = load_model('../Sup/sentimental_model.h5')
-sen_model.load_weights('../Sup/sentimental_model_weights.h5')
+sen_model = load_model('./Sup/sentimental_model.h5')
+sen_model.load_weights('./Sup/sentimental_model_weights.h5')
 
 # loading tokenizer
-with open('../Sup/sentimental_tokenizer.pickle', 'rb') as handle:
+with open('./Sup/sentimental_tokenizer.pickle', 'rb') as handle:
     sen_tokenizer = load(handle)
 
-# loading labeleEncoder
-with open('../Sup/sentimental_labeleEncorder.pkl', 'rb') as handle:
-    sen_label_encoder = load(handle)
 
-categories = ['DIRECTING#PERFORMANCE', 'WRITING#PERFORMANCE', 'CAST#PERFORMANCE',
-              'PERFOMANCE#GENERAL', 'CREW#PERFORMANCE', 'PRODUCTION#PERFOMANCE']
+categories = ['DIRECTING PERFORMANCE', 'CAST PERFORMANCE']
 
 def predictions(csv_path):
     data = read_csv(csv_path)
@@ -54,27 +47,22 @@ def predictions(csv_path):
             test_sentiment_terms.append('')
     test_sentiment_terms = DataFrame(sen_tokenizer.texts_to_matrix(test_sentiment_terms))
 
-    test_aspect_categories = cat_label_encoder.inverse_transform(cat_model.predict_classes(test_aspect_terms))
-    test_sentiment = sen_label_encoder.inverse_transform(sen_model.predict_classes(test_sentiment_terms))
+    test_aspect_categories = cat_model.predict_classes(test_aspect_terms)
+    test_sentiment = sen_model.predict_classes(test_sentiment_terms)
 
-    categorized = [[],[],[],[],[],[]]
+    sen_column = DataFrame(test_sentiment)
+    cat_column = DataFrame(test_aspect_categories)
+    data['sentiment_results'] = sen_column
+    data['categorical_result'] = cat_column
+
+    categorized = [[],[]]
     for ind,i in enumerate(test_aspect_categories):
-        if i == 'DIRECTING#PERFORMANCE':
+        if i == 0:
             categorized[0].append(ind)
-            continue
-        elif i == 'WRITING#PERFORMANCE':
+
+        elif i == 1:
             categorized[1].append(ind)
-            continue
-        elif i == 'CAST#PERFORMANCE' :
-            categorized[2].append(ind)
-            continue
-        elif i == 'PERFOMANCE#GENERAL' :
-            categorized[3].append(ind)
-            continue
-        elif i == 'CREW#PERFORMANCE' :
-            categorized[4].append(ind)
-        elif i == 'PRODUCTION#PERFOMANCE':
-            categorized[5].append(ind)
+
 
     result = {}
     for ind in range(len(categorized)):
@@ -82,11 +70,14 @@ def predictions(csv_path):
         tol = len(lis)
         pos = 0
         for val in lis:
-            if test_sentiment[val] == 'Neutral':
+            if test_sentiment[val] == 1:
                 pos+=1
         result[categories[ind]] = pos/tol if tol != 0 else 0.0
 
     print(result)
+
+    return data,result
+
 
 predictions('./Sup/test.csv')
 
