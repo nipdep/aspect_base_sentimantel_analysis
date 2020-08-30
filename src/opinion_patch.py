@@ -50,8 +50,8 @@ def predictions(csv_path):
     test_aspect_categories = cat_model.predict_classes(test_aspect_terms)
     test_sentiment = sen_model.predict_classes(test_sentiment_terms)
 
-    sen_column = DataFrame(test_sentiment)
-    cat_column = DataFrame(test_aspect_categories)
+    sen_column = DataFrame(list(map(lambda x:'DIRECTING PERFORMANCE' if x==0 else 'CAST PERFORMANCE',test_sentiment)))
+    cat_column = DataFrame(list(map(lambda y:'Positive' if y==1 else 'Negative',test_aspect_categories)))
     data['sentiment_results'] = sen_column
     data['categorical_result'] = cat_column
 
@@ -59,7 +59,6 @@ def predictions(csv_path):
     for ind,i in enumerate(test_aspect_categories):
         if i == 0:
             categorized[0].append(ind)
-
         elif i == 1:
             categorized[1].append(ind)
 
