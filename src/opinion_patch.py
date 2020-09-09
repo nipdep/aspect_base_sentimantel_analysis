@@ -2,20 +2,24 @@
 # Input : csv file with filled one column of reviews of a movie
 # Output : percentages of positive reviews on each 6 categories.
 
+# import libraries
 from pickle import load
 from tensorflow.keras.models import load_model
 import spacy
 from pandas import read_csv,DataFrame
 nlp = spacy.load('en_core_web_sm')
 
-cat_model = load_model('./Sup/categorical_model.h5')
-cat_model.load_weights('./Sup/categorical_model_weights.h5')
+
+# import trained model parameters
+#categorical model
+cat_model = load_model('./Sup/categorical_model_fin.h5')
+cat_model.load_weights('./Sup/categorical_model_fin_weights.h5')
 
 # loading tokenizer
 with open('./Sup/categorical_tokenizer.pickle', 'rb') as handle:
     cat_tokenizer = load(handle)
 
-
+# sentiment analysis model
 sen_model = load_model('./Sup/sentimental_model.h5')
 sen_model.load_weights('./Sup/sentimental_model_weights.h5')
 
@@ -23,13 +27,14 @@ sen_model.load_weights('./Sup/sentimental_model_weights.h5')
 with open('./Sup/sentimental_tokenizer.pickle', 'rb') as handle:
     sen_tokenizer = load(handle)
 
-
+# labels
 categories = ['DIRECTING PERFORMANCE', 'CAST PERFORMANCE']
 
+# define the function to make prediction using both model and output the summary
 def predictions(csv_path):
     data = read_csv(csv_path)
     reviews = data['review']
-
+    #categorical nlp process
     test_reviews = [review.lower() for review in reviews]
     test_aspect_terms = []
     for review in nlp.pipe(test_reviews):
@@ -54,7 +59,7 @@ def predictions(csv_path):
     cat_column = DataFrame(list(map(lambda y:'Positive' if y==1 else 'Negative',test_aspect_categories)))
     data['sentiment_results'] = sen_column
     data['categorical_result'] = cat_column
-
+    # decorate the result
     categorized = [[],[]]
     for ind,i in enumerate(test_aspect_categories):
         if i == 0:
@@ -77,7 +82,7 @@ def predictions(csv_path):
 
     return data,result
 
-
+# call to the defined function
 predictions('./Sup/test.csv')
 
 

@@ -1,10 +1,12 @@
-
+# import libraries
 from pickle import load
 from tensorflow.keras.models import load_model
 import spacy
 nlp = spacy.load('en_core_web_sm')
 import pandas as pd
 
+#import trained models parameters
+#sentiment analysis model
 model = load_model('./Sup/sentimental_model.h5')
 model.load_weights('./Sup/sentimental_model_weights.h5')
 
