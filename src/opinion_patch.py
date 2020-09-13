@@ -12,19 +12,19 @@ nlp = spacy.load('en_core_web_sm')
 
 # import trained model parameters
 #categorical model
-cat_model = load_model('./Sup/categorical_model_fin.h5')
-cat_model.load_weights('./Sup/categorical_model_fin_weights.h5')
+cat_model = load_model('../Sup/categorical_model_fin.h5')
+cat_model.load_weights('../Sup/categorical_model_fin_weights.h5')
 
 # loading tokenizer
-with open('./Sup/categorical_tokenizer.pickle', 'rb') as handle:
+with open('../Sup/categorical_tokenizer.pickle', 'rb') as handle:
     cat_tokenizer = load(handle)
 
 # sentiment analysis model
-sen_model = load_model('./Sup/sentimental_model.h5')
-sen_model.load_weights('./Sup/sentimental_model_weights.h5')
+sen_model = load_model('../Sup/sentimental_model.h5')
+sen_model.load_weights('../Sup/sentimental_model_weights.h5')
 
 # loading tokenizer
-with open('./Sup/sentimental_tokenizer.pickle', 'rb') as handle:
+with open('../Sup/sentimental_tokenizer.pickle', 'rb') as handle:
     sen_tokenizer = load(handle)
 
 # labels
@@ -54,6 +54,7 @@ def predictions(csv_path):
 
     test_aspect_categories = cat_model.predict_classes(test_aspect_terms)
     test_sentiment = sen_model.predict_classes(test_sentiment_terms)
+    print(test_aspect_categories[:10],test_sentiment[:10])
 
     sen_column = DataFrame(list(map(lambda x:'DIRECTING PERFORMANCE' if x==0 else 'CAST PERFORMANCE',test_sentiment)))
     cat_column = DataFrame(list(map(lambda y:'Positive' if y==1 else 'Negative',test_aspect_categories)))
@@ -83,7 +84,7 @@ def predictions(csv_path):
     return data,result
 
 # call to the defined function
-predictions('./Sup/test.csv')
+predictions('../Sup/testing.csv')
 
 
 # sentiments = ['Positive','Negative','Neutral']
