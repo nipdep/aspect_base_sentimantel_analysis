@@ -43,12 +43,15 @@ def predictions(csv_path):
         gen_qua.append(prec)
     fin_result =  {'Action':gen_qua[0],'Horror':gen_qua[1],'Comedy':gen_qua[2],'Romance':gen_qua[3],'Animation':gen_qua[4]}
     sen_result = list(map(lambda x:'Positive' if x == 1 else 'Negative',sen_results))
+    gen_lis = ['Action','Horror','Comedy','Romance','Animation']
+    fin_gen_result = list(map(lambda x:gen_lis[x],gen_results))
     sen_res = DataFrame(sen_result)
-    gen_res = DataFrame(gen_results)
+    gen_res = DataFrame(fin_gen_result)
     data['Genre result'] = gen_res
     data['Sentiment result'] = sen_res
     print(fin_result)
+    print(data.head())
     return data,fin_result
 
 #call to the function
-predictions('../Sup/test.csv')
+dataf,res = predictions('../Sup/test.csv')
