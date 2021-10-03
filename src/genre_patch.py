@@ -22,10 +22,10 @@ with open('../Sup/categorical_genre_labeleEncorder.pkl', 'rb') as handle:
     cat_label_encoder = load(handle)
 #senriment analysis model
 sen_model = load_model('../Sup/sentimental_model.1.h5')
-sen_model.load_weights('../Sup/sentimental_model_weights1.1.h5')
+sen_model.load_weights('../Sup/sentimental_model_weights.1.h5')
 
 # loading tokenizer
-with open('../Sup/sentimental_1_tokenizer.pickle', 'rb') as handle:
+with open('../Sup/sentimental_tokenizer.pickle', 'rb') as handle:
     sen_tokenizer = load(handle)
 
 # loading labeleEncoder

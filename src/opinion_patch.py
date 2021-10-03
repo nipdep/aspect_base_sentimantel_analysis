@@ -58,7 +58,7 @@ def predictions(csv_path):
 
     sen_column = DataFrame(list(map(lambda x:'DIRECTING PERFORMANCE' if x==0 else 'CAST PERFORMANCE',test_sentiment)))
     cat_column = DataFrame(list(map(lambda y:'Positive' if y==1 else 'Negative',test_aspect_categories)))
-    data['sentiment_results'] = sen_column
+    data['sentiment_results'] = test_sentiment
     data['categorical_result'] = cat_column
     # decorate the result
     categorized = [[],[]]
